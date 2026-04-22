@@ -7,6 +7,8 @@ const Home = () => {
 
   const items = useCartStore((state) => state.items)
   console.log(items)
+  // count total quantity of added products
+  const totalItems = items.reduce((sum, item) => sum + item.quantity, 0)
 
   return (
     <section className='min-h-screen px-4 max-w-md mx-auto'>
@@ -15,9 +17,17 @@ const Home = () => {
           Kuhinjica 🍲
         </h1>
 
-        <button className="text-xl">
-          🛒
-        </button>
+        <div className="relative w-fit">
+          <button className="text-xl">
+            🛒
+          </button>
+
+          {totalItems > 0 && (
+            <span className="absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 bg-[#E53935] text-white text-xs w-4 h-4 flex items-center justify-center rounded-full shadow">
+              {totalItems}
+            </span>
+          )}
+        </div>
       </header>
       <div className="mt-4 flex flex-col gap-4">
       {menu.map((item) => (
