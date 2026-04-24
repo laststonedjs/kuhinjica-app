@@ -2,6 +2,13 @@ import { useCartStore } from "../store/useCartStore";
 
 const Cart = () => {
   const items = useCartStore((state) => state.items)
+  const increase = useCartStore((state) => state.increaseQuantity)
+  const decrease = useCartStore((state) => state.decreaseQuantity)
+
+  const totalPrice = items.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  )
 
   return (
     <section className="min-h-screen px-4 max-w-md mx-auto">
@@ -23,12 +30,32 @@ const Cart = () => {
                 </p>
               </div>
 
-              <div className="font-semibold">
-                {item.price * item.quantity} KM
+              <div className="flex items-center gap-2">
+
+                <button
+                    onClick={() => decrease(item.id)}
+                    className="px-2 py-1 border rounded"
+                >
+                    -
+                </button>   
+
+                <span>{item.quantity}</span>
+
+                <button
+                    onClick={() => increase(item.id)}
+                    className="px-2 py-1 border rounded"
+                >
+                    +
+                </button>
               </div>
             </div>
           ))
         )}
+      </div>
+
+      <div className="mt-6 border-t pt-4 flex justify-between font-semibold text-lg">
+        <span>Ukupno:</span>
+        <span>{totalPrice} KM</span>
       </div>
     </section>
   )
