@@ -1,13 +1,13 @@
 import { menu } from "../data/menu"
 
-import { useCartStore } from "../store/userCartStore"
+import { useCartStore } from "../store/useCartStore"
 
 const Home = () => {
   const addToCart = useCartStore((state) => state.addToCart)
 
   const items = useCartStore((state) => state.items)
   console.log(items)
-  
+
   // count total quantity of added products
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0)
 
