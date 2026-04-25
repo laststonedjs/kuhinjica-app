@@ -1,8 +1,10 @@
+import { useNavigate } from "react-router-dom"
 import { menu } from "../data/menu"
 
 import { useCartStore } from "../store/useCartStore"
 
 const Home = () => {
+  const navigate = useNavigate();
   const addToCart = useCartStore((state) => state.addToCart)
 
   const items = useCartStore((state) => state.items)
@@ -19,7 +21,10 @@ const Home = () => {
         </h1>
 
          <div className="relative w-fit">
-          <button className="text-xl">
+          <button 
+            onClick={() => navigate("/cart")}
+            className="text-xl"
+          >
             🛒
           </button>
 

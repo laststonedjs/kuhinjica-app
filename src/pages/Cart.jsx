@@ -1,9 +1,11 @@
 import { useCartStore } from "../store/useCartStore";
+import { useNavigate } from "react-router-dom"
 
 const Cart = () => {
   const items = useCartStore((state) => state.items)
   const increase = useCartStore((state) => state.increaseQuantity)
   const decrease = useCartStore((state) => state.decreaseQuantity)
+  const navigate = useNavigate()
 
   const totalPrice = items.reduce(
     (sum, item) => sum + item.price * item.quantity,
@@ -43,7 +45,7 @@ const Cart = () => {
 
                 <button
                     onClick={() => increase(item.id)}
-                    className="px-2 py-1 border rounded"
+                    className="px-2 py-1 border rounded "
                 >
                     +
                 </button>
@@ -57,7 +59,14 @@ const Cart = () => {
         <span>Ukupno:</span>
         <span>{totalPrice} KM</span>
       </div>
-    </section>
+
+      <button
+        onClick={() => navigate(-1)}
+        className="mb-4 text-sm text-gray-600 mt-6"
+      >
+        ← Nazad
+      </button>
+    </section>  
   )
 }
 
