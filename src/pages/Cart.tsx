@@ -60,6 +60,14 @@ const Cart = () => {
         <span>{totalPrice} KM</span>
       </div>
 
+      {/* CHECKOUT */}
+      <button
+        onClick={() => navigate("/checkout")}
+        className="mt-6 w-full bg-[#E53935] text-white py-3 rounded-xl"
+      >
+        Nastavi na checkout
+      </button>
+
       <button
         onClick={() => navigate(-1)}
         className="mb-4 text-sm text-gray-600 mt-6"
