@@ -2,6 +2,7 @@ import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 
 import { useCartStore } from "../store/useCartStore"
+import toast from "react-hot-toast"
 
 const Checkout = () => {
   const items = useCartStore((state) => state.items)
@@ -12,6 +13,7 @@ const Checkout = () => {
     address: "",
     note: "",
   })
+  const [loading, setLoading] = useState(false)
 
   const navigate = useNavigate();
 
@@ -22,16 +24,21 @@ const Checkout = () => {
     setForm((prev) => ({ ...prev, [name]: value }))
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!form.name || !form.phone || !form.address) {
-      alert("Molimo popunite sva obavezna polja")
+      toast.error("Molimo popunite sva obavezna polja")
       return
     }
 
     if (items.length === 0) {
-      alert("Korpa je prazna")
+      toast.error("Korpa je prazna")
       return
     }
+
+    setLoading(true);
+
+    // request simulation
+    await new Promise((resolve) => setTimeout(resolve, 1500))
 
     console.log("ORDER:", {
       customer: form,
@@ -40,6 +47,7 @@ const Checkout = () => {
     })
 
     clearCart()
+    setLoading(false);
 
     navigate("/success")
   }
@@ -60,7 +68,7 @@ const Checkout = () => {
           value={form.name}
           onChange={handleChange}
           placeholder="Ime i prezime"
-          className="border p-3 rounded-lg"
+          className="border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E53935]"
         />
 
         <input
@@ -69,7 +77,7 @@ const Checkout = () => {
           placeholder="Telefon"
           value={form.phone}
           onChange={handleChange}
-          className="border p-3 rounded-lg"
+          className="border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E53935]"
         />
 
         <input
@@ -78,7 +86,7 @@ const Checkout = () => {
           value={form.address}
           onChange={handleChange}
           placeholder="Adresa"
-          className="border p-3 rounded-lg"
+          className="border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E53935]"
         />
 
         <textarea
@@ -86,7 +94,7 @@ const Checkout = () => {
           value={form.note}
           onChange={handleChange}
           placeholder="Napomena (opcionalno)"
-          className="border p-3 rounded-lg"
+          className="border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E53935]"
         />
       </div>
 
@@ -95,11 +103,14 @@ const Checkout = () => {
         <span>{totalPrice} KM</span>
       </div>
 
-      <button 
-        className="mt-6 w-full bg-[#E53935] text-white py-3 rounded-xl"
+      <button
         onClick={handleSubmit}
+        disabled={loading}
+        className={`mt-6 w-full py-3 rounded-xl text-white ${
+          loading ? "bg-gray-400" : "bg-[#E53935]"
+        }`}
       >
-        Potvrdi narudžbu
+        {loading ? "Slanje..." : "Potvrdi narudžbu"}
       </button>
     </section>
   )
