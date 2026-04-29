@@ -6,6 +6,7 @@ const Cart = () => {
   const increase = useCartStore((state) => state.increaseQuantity)
   const decrease = useCartStore((state) => state.decreaseQuantity)
   const navigate = useNavigate()
+  const isEmpty = items.length === 0
 
   const totalPrice = items.reduce(
     (sum, item) => sum + item.price * item.quantity,
@@ -63,7 +64,10 @@ const Cart = () => {
       {/* CHECKOUT */}
       <button
         onClick={() => navigate("/checkout")}
-        className="mt-6 w-full bg-[#E53935] text-white py-3 rounded-xl"
+        disabled={isEmpty}
+        className={`mt-6 w-full py-3 rounded-xl text-white ${
+          isEmpty ? "bg-gray-400 cursor-not-allowed" : "bg-[#E53935]"
+        }`}
       >
         Nastavi na checkout
       </button>
