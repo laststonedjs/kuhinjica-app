@@ -1,8 +1,11 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { useEffect } from "react"
 
 import { useCartStore } from "../store/useCartStore"
 import toast from "react-hot-toast"
+
+import { supabase } from "../lib/supabase"
 
 const Checkout = () => {
   const items = useCartStore((state) => state.items)
@@ -16,6 +19,12 @@ const Checkout = () => {
   const [loading, setLoading] = useState(false)
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (items.length === 0) {
+      navigate("/")
+    }
+  }, [items, navigate])
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -37,18 +46,28 @@ const Checkout = () => {
 
     setLoading(true);
 
-    // request simulation
-    await new Promise((resolve) => setTimeout(resolve, 1500))
+    const { error } = await supabase.from("orders").insert([
+      {
+        name: form.name,
+        phone: form.phone,
+        address: form.address,
+        note: form.note,
+        items,
+        total: totalPrice,
+      },
+    ])
 
-    console.log("ORDER:", {
-      customer: form,
-      items,
-      totalPrice,
-    })
+    if(error) {
+      console.error(error)
+      toast.error("Greška pri slanju narudžbe")
+      setLoading(false)
+      return
+    }
 
     clearCart()
     setLoading(false);
 
+    toast.success("Narudžba uspješno poslana!")
     navigate("/success")
   }
 
