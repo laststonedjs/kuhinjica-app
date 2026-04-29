@@ -1,6 +1,8 @@
 import { Routes, Route } from "react-router-dom";
 // pages
-import { Home, Cart, Checkout, Success } from "./pages"
+import { Home, Cart, Checkout, Success, Admin, AdminLogin } from "./pages"
+// components
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
@@ -10,6 +12,14 @@ function App() {
         <Route path="/cart" element={<Cart />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/success" element={<Success />} />
+        <Route 
+          path="/admin" 
+          element={
+            <ProtectedRoute>
+              <Admin />
+            </ProtectedRoute>
+          } /> 
+        <Route path="/admin-login" element={<AdminLogin />} />
       </Routes>
     </div>
   )

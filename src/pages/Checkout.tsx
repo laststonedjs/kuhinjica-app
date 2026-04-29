@@ -67,7 +67,9 @@ const Checkout = () => {
     clearCart()
     setLoading(false);
 
-    toast.success("Narudžba uspješno poslana!")
+    toast.success("Narudžba uspješno poslana!", {
+      duration: 5000,
+    })
     navigate("/success")
   }
 
