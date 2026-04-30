@@ -59,9 +59,44 @@ const Admin = () => {
 
     fetchOrders()
 
-    const interval = setInterval(fetchOrders, 3000)
+    // realtime
+    const channel = supabase
+      .channel("orders-channel")
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "orders",
+        },
+        (payload) => {
+          const newOrder = payload.new
+          setOrders((prev) => [newOrder, ...prev])
+        }
+      )
+      .on(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "orders"
+        },
+        (payload) => {
+          const updatedOrder = payload.new
 
-    return () => clearInterval(interval);
+          setOrders((prev) =>
+            prev.map((order) =>
+              order.id === updatedOrder.id ? updatedOrder : order
+            )
+          )
+        }
+      )
+      .subscribe()
+
+    // cleanup
+    return () => {
+      supabase.removeChannel(channel)
+    }
   }, [])
 
   if (loading) {
