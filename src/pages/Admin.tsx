@@ -26,13 +26,14 @@ const Admin = () => {
         .from("orders")
         .update({ status })
         .eq("id", id)
+        .select()
 
     if (error) {
         console.error(error)
         return
     }
 
-    // refresh liste
+    // refresh list
     setOrders((prev) =>
         prev.map((order) =>
         order.id === id ? { ...order, status } : order
@@ -49,15 +50,18 @@ const Admin = () => {
 
         if (error) {
         console.error(error)
-        setLoading(false)
         return
         }
 
-        setOrders(data || [])
+        setOrders([...(data || [])])
         setLoading(false)
     }
 
     fetchOrders()
+
+    const interval = setInterval(fetchOrders, 3000)
+
+    return () => clearInterval(interval);
   }, [])
 
   if (loading) {
